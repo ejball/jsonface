@@ -8,4 +8,4 @@ A geeky Pebble watchface that looks like a JSON document.
 
 Currently supports only black and white watches (Pebble Classic, Pebble Steel).
 
-Uses [pbcpp](https://github.com/ejball/pbcpp).
+Uses [pbcpp](https://github.com/ejball/pbcpp), a C++ library for writing Pebble watchfaces and apps.
