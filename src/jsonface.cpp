@@ -17,13 +17,14 @@ public:
   }
 
   void onWindowLoad() {
+    const int textHeight = 24 * 5 + 2;
     PbRect bounds = _window.layer().bounds();
-    bounds.top(bounds.top() + 16).height(bounds.height() - 32);
+    bounds.top((bounds.height() - textHeight) / 2).height(textHeight);
     _textLayer.create(bounds)
       .font(PbFontRef::fromSystem(FONT_KEY_GOTHIC_24_BOLD))
       .backgroundColor(GColorBlack)
       .textColor(GColorWhite)
-      .textAlignment(GTextAlignmentLeft);
+      .textAlignment(PbSystem::isRound() ? GTextAlignmentCenter : GTextAlignmentLeft);
 
     refreshTime(PbDateTime::now().localInfo());
 
@@ -36,19 +37,21 @@ public:
 
 private:
   void refreshTime(const PbDateTimeInfo & dateTimeInfo) {
-    _textLayerText.assign("{\n  \"t\": \"");
-    if (clock_is_24h_style()) {
+    const char * leading = PbSystem::isRound() ? "" : "  ";
+    const char * trailing = PbSystem::isRound() ? " " : "";
+    _textLayerText.assignFormat("{%s\n%s\"t\": \"", trailing, leading);
+    if (PbSystem::is24hStyle()) {
       _textLayerText.appendFormat("%02d:%02d",
         dateTimeInfo.hour(), dateTimeInfo.minute());
     } else {
       _textLayerText.appendFormat("%d:%02d%s",
         dateTimeInfo.hour12(), dateTimeInfo.minute(), dateTimeInfo.isPM() ? "pm" : "am");
     }
-    _textLayerText.append("\",\n  \"k\": \"")
+    _textLayerText.appendFormat("\",%s\n%s\"k\": \"", trailing, leading)
       .appendDateTimeFormat(9, "%A", dateTimeInfo)
-      .append("\",\n  \"d\": \"")
+      .appendFormat("\",%s\n%s\"d\": \"", trailing, leading)
       .appendDateTimeFormat(6, "%d %b", dateTimeInfo)
-      .append("\"\n}");
+      .appendFormat("\"%s\n}%s", trailing, trailing);
     _textLayer.text(_textLayerText.c_str());
   }
 
