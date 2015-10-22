@@ -17,7 +17,7 @@ public:
   }
 
   void onWindowLoad() {
-    const int textHeight = 24 * 5 + 2;
+    const int textHeight = 24 * 5 + 16;
     PbRect bounds = _window.layer().bounds();
     bounds.top((bounds.height() - textHeight) / 2).height(textHeight);
     _textLayer.create(bounds)
